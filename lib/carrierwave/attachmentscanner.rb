@@ -4,8 +4,8 @@ require 'carrierwave/attachmentscanner/version'
 
 module CarrierWave
   module AttachmentScanner
-    Config = Struct.new(:url, :api_token).new(ENV['ATTACHMENT_SCANNER_URL'],
-      ENV['ATTACHMENT_SCANNER_API_TOKEN'])
+    Config = Struct.new(:url, :api_token, :enabled).new(ENV['ATTACHMENT_SCANNER_URL'],
+      ENV['ATTACHMENT_SCANNER_API_TOKEN'], true)
 
     class AttachmentScannerError < CarrierWave::IntegrityError
       attr_accessor :status
@@ -13,8 +13,10 @@ module CarrierWave
     end
 
     def self.included(base)
-      raise ArgumentError, "AttachmentScanner API Token is required" unless Config.api_token
-      raise ArgumentError, "AttachmentScanner URL is required" unless Config.url
+      if Config.enabled
+        raise ArgumentError, "AttachmentScanner API Token is required" unless Config.api_token
+        raise ArgumentError, "AttachmentScanner URL is required" unless Config.url
+      end
 
       base.before :cache, :scan_file!
     end
@@ -26,6 +28,8 @@ module CarrierWave
     end
 
     def scan_file!(new_file)
+      return warn("[CarrierWave::AttachmentScanner] Disabled") unless Config.enabled
+
       result = send_to_scanner(new_file)
       scan_result_allowed?(result)
     end

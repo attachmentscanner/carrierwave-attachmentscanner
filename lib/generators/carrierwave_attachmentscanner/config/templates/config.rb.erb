@@ -5,4 +5,7 @@
 CarrierWave::AttachmentScanner.configure do |config|
   config.url = <%= cluster_url.starts_with?("ENV") ? cluster_url : "\"#{cluster_url}\"" %>
   config.api_token = <%= api_token.starts_with?("ENV") ? api_token : "\"#{api_token}\"" %>
+
+  # Disable in test and development environments
+  # config.enabled = false if Rails.env.development? || Rails.env.test?
 end
