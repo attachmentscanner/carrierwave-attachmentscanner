@@ -1,0 +1,8 @@
+# Sets up credentials needed for AttachmentScanner to check files.
+# By default it will check the ENV variables of a project.
+# Change this to manually set the configuration.
+
+CarrierWave::AttachmentScanner.configure do |config|
+  config.url = <%= cluster_url.starts_with?("ENV") ? cluster_url : "\"#{cluster_url}\"" %>
+  config.api_token = <%= api_token.starts_with?("ENV") ? api_token : "\"#{api_token}\"" %>
+end
