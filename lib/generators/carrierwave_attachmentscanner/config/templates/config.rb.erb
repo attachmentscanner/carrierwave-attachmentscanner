@@ -6,6 +6,9 @@ CarrierWave::AttachmentScanner.configure do |config|
   config.url = <%= cluster_url.starts_with?("ENV") ? cluster_url : "\"#{cluster_url}\"" %>
   config.api_token = <%= api_token.starts_with?("ENV") ? api_token : "\"#{api_token}\"" %>
 
+  # Set the logger to the Rails logger so we don't need to use STDOUT
+  config.logger = Rails.logger
+
   # Disable in test and development environments
   # config.enabled = false if Rails.env.development? || Rails.env.test?
 end

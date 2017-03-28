@@ -4,8 +4,11 @@ require 'carrierwave/attachmentscanner/version'
 
 module CarrierWave
   module AttachmentScanner
-    Config = Struct.new(:url, :api_token, :enabled).new(ENV['ATTACHMENT_SCANNER_URL'],
-      ENV['ATTACHMENT_SCANNER_API_TOKEN'], true)
+    Config = Struct.new(:url, :api_token, :enabled, :logger)
+                   .new(ENV['ATTACHMENT_SCANNER_URL'], ENV['ATTACHMENT_SCANNER_API_TOKEN'],
+                     true, Logger.new(STDOUT))
+
+    DISABLED_WARNING = "[CarrierWave::AttachmentScanner] Disabled".freeze
 
     class AttachmentScannerError < CarrierWave::IntegrityError
       attr_accessor :status
@@ -28,14 +31,17 @@ module CarrierWave
     end
 
     def scan_file!(new_file)
-      return warn("[CarrierWave::AttachmentScanner] Disabled") unless Config.enabled
+      return Config.logger.warn(DISABLED_WARNING) unless Config.enabled
 
       result = send_to_scanner(new_file)
       scan_result_allowed?(result)
     end
 
     def scan_result_allowed?(result)
+      Config.logger.info("[CarrierWave::AttachmentScanner] status: #{result['status']}")
       return true unless blocked_scan_statuses.include?(result['status'])
+
+      Config.logger.warn("[CarrierWave::AttachmentScanner] matched: #{result['matches']}")
 
       error = AttachmentScannerError.new(scan_error_message(result))
       error.status = result['status']
@@ -63,6 +69,7 @@ module CarrierWave
       root_file = root_file.file while root_file.is_a?(CarrierWave::SanitizedFile)
       file_or_path = root_file.respond_to?(:path) ? new_file.path : root_file
 
+      Config.logger.info("[CarrierWave::AttachmentScanner] scanning #{new_file.filename}")
       upload = Faraday::UploadIO.new(file_or_path, new_file.content_type, new_file.filename)
       response = scan_connection.post('/requests', file: upload)
       response.body
