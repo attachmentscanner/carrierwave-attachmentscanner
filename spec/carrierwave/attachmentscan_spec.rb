@@ -47,7 +47,7 @@ describe CarrierWave::AttachmentScanner do
 
   context '#store!' do
     subject { TestUploader.new }
-    after { file.close if file }
+    after { file.close if file && !file.closed? }
 
     context 'with a valid file' do
       let(:file) { open_fixture('plain.txt') }
