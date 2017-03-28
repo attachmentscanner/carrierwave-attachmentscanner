@@ -1,5 +1,7 @@
 # Carrierwave::Attachmentscanner
 
+[![Build Status](https://travis-ci.org/attachmentscanner/carrierwave-attachmentscanner.svg?branch=master)](https://travis-ci.org/attachmentscanner/carrierwave-attachmentscanner)
+
 Carrierwave::Attachmentscanner allows you to scan any file uploaded by
 [CarrierWave](https://github.com/carrierwaveuploader/carrierwave) for viruses or
 other malicious content.
