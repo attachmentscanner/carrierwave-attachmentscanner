@@ -7,22 +7,13 @@ Gem::Specification.new do |spec|
   spec.name          = "carrierwave-attachmentscanner"
   spec.version       = CarrierWave::AttachmentScanner::VERSION
   spec.authors       = ["Steve Smith"]
-  spec.email         = ["github@scsworld.co.uk"]
+  spec.email         = ["gems@dynedge.co.uk"]
 
   spec.summary       = %q{Scan carrierwave attachments using AttachmentScanner}
   spec.description   = %q{Automatically sends carrierwave uploads to AttachmentScanner to search for
     viruses, malware and other malicious files. }
   spec.homepage      = "http://www.attachmentscanner.com"
   spec.license       = "MIT"
-
-  # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
-  # to allow pushing to a single host or delete this section to allow pushing to any host.
-  if spec.respond_to?(:metadata)
-    spec.metadata['allowed_push_host'] = "TODO: Set to 'http://mygemserver.com'"
-  else
-    raise "RubyGems 2.0 or newer is required to protect against " \
-      "public gem pushes."
-  end
 
   spec.files         = `git ls-files -z`.split("\x0").reject do |f|
     f.match(%r{^(test|spec|features)/})
