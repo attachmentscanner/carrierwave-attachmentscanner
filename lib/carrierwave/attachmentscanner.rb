@@ -4,9 +4,9 @@ require 'carrierwave/attachmentscanner/version'
 
 module CarrierWave
   module AttachmentScanner
-    Config = Struct.new(:url, :api_token, :enabled, :logger)
+    Config = Struct.new(:url, :api_token, :enabled, :logger, :timeout)
                    .new(ENV['ATTACHMENT_SCANNER_URL'], ENV['ATTACHMENT_SCANNER_API_TOKEN'],
-                     true, Logger.new(STDOUT))
+                     true, Logger.new(STDOUT), 60)
 
     DISABLED_WARNING = "[CarrierWave::AttachmentScanner] Disabled".freeze
 
@@ -77,6 +77,8 @@ module CarrierWave
 
     def scan_connection
       Faraday.new(Config.url) do |f|
+        f.options[:open_timeout] = Config.timeout
+        f.options[:timeout] = Config.timeout
         f.request :multipart
         f.request :url_encoded
         f.authorization :Bearer, Config.api_token
