@@ -11,4 +11,7 @@ CarrierWave::AttachmentScanner.configure do |config|
 
   # Disable in test and development environments
   # config.enabled = false if Rails.env.development? || Rails.env.test?
+
+  # Set a custom timeout for connections. Defaults to 60 seconds
+  # config.timeout = 60
 end
