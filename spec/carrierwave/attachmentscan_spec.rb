@@ -74,14 +74,14 @@ describe CarrierWave::AttachmentScanner do
       it 'sets the scan status' do
         expect { subject.store!(file) }
           .to raise_error(CarrierWave::AttachmentScanner::AttachmentScannerError) do |error|
-            expect(error.matches).to match_array(["Eicar-Test-Signature"])
+            expect(error.matches).to include(/eicar/i)
           end
       end
 
       it 'sets the scan matches' do
         expect { subject.store!(file) }
           .to raise_error(CarrierWave::AttachmentScanner::AttachmentScannerError) do |error|
-            expect(error.matches).to match_array(["Eicar-Test-Signature"])
+            expect(error.matches).to include(/eicar/i)
           end
       end
     end
@@ -97,7 +97,8 @@ describe CarrierWave::AttachmentScanner do
 
     context 'when the file is a StringIO' do
       let(:file) { StringIO.new('test') }
-      let(:file_hash) { { tempfile: file, filename: 'test.txt', original_filename: 'test.txt', content_type: 'text/plain' } }
+      let(:file_hash) { { tempfile: file, filename: 'test.txt', original_filename: 'test.txt',
+        content_type: 'text/plain' } }
       let(:sanitized) { CarrierWave::SanitizedFile.new(file_hash) }
 
       it 'raises nothing' do
