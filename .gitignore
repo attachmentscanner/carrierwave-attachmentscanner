@@ -21,3 +21,4 @@ Gemfile.lock
 
 # Docker is being used in development but we're not ready to push this yet.
 Dockerfile
+docker-compose.yml

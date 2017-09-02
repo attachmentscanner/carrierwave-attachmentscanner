@@ -74,7 +74,7 @@ describe CarrierWave::AttachmentScanner do
       it 'sets the scan status' do
         expect { subject.store!(file) }
           .to raise_error(CarrierWave::AttachmentScanner::AttachmentScannerError) do |error|
-            expect(error.matches).to include(/eicar/i)
+            expect(error.status).to eq('found')
           end
       end
 
@@ -83,6 +83,35 @@ describe CarrierWave::AttachmentScanner do
           .to raise_error(CarrierWave::AttachmentScanner::AttachmentScannerError) do |error|
             expect(error.matches).to include(/eicar/i)
           end
+      end
+    end
+
+    # File with macro from https://github.com/righettod/document-upload-protection
+    context 'with a macro-enabled file' do
+      let(:file) { open_fixture('test-with-macro.doc') }
+
+      context 'with the default config' do
+        it 'does not raise an IntegrityError' do
+          expect { subject.store!(file) }.not_to raise_error
+        end
+      end
+
+      context 'when we raise warning statuses' do
+        before do
+          expect_any_instance_of(TestUploader).to receive(:blocked_scan_statuses)
+            .and_return(%w(found warning))
+        end
+
+        it 'raises an IntegrityError' do
+          expect { subject.store!(file) }.to raise_error(CarrierWave::IntegrityError)
+        end
+
+        it 'sets the scan matches' do
+          expect { subject.store!(file) }
+            .to raise_error(CarrierWave::AttachmentScanner::AttachmentScannerError) do |error|
+              expect(error.matches).to include(/macro/i)
+            end
+        end
       end
     end
 

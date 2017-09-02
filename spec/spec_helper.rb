@@ -6,7 +6,11 @@ $LOAD_PATH.unshift File.expand_path("../../lib", __FILE__)
 require 'carrierwave'
 require "carrierwave/attachmentscanner"
 require 'support/fixtures'
+require 'support/null_logger'
 
+CarrierWave::AttachmentScanner.configure do |config|
+  config.logger = NullLogger.new unless ENV['DEBUG']
+end
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|
