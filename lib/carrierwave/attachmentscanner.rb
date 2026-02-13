@@ -1,5 +1,5 @@
 require 'faraday'
-require 'faraday_middleware'
+require 'faraday/multipart'
 require 'carrierwave/attachmentscanner/version'
 
 module CarrierWave
@@ -62,7 +62,7 @@ module CarrierWave
 
     def send_to_scanner(new_file)
       # Needed to support the case that a StringIO is being passed.
-      # Passes the root StringIO to Faraday::UploadIO unless we think this is a
+      # Passes the root StringIO to Faraday::FilePart unless we think this is a
       # file (i.e. has path) in which case we pass the file.
       # We can't pass the SanitizedFile as it implements read without arguments.
       root_file = new_file
@@ -70,7 +70,7 @@ module CarrierWave
       file_or_path = root_file.respond_to?(:path) ? new_file.path : root_file
 
       Config.logger.info("[CarrierWave::AttachmentScanner] scanning #{new_file.filename}")
-      upload = Faraday::UploadIO.new(file_or_path, new_file.content_type, new_file.filename)
+      upload = Faraday::FilePart.new(file_or_path, new_file.content_type, new_file.filename)
       response = scan_connection.post('/requests', file: upload)
       response.body
     end
@@ -81,7 +81,7 @@ module CarrierWave
         f.options[:timeout] = Config.timeout
         f.request :multipart
         f.request :url_encoded
-        f.authorization :Bearer, Config.api_token
+        f.request :authorization, 'Bearer', -> { Config.api_token }
         f.response :json
         f.response :raise_error
         f.adapter :net_http

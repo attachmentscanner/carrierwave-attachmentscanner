@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
   spec.summary       = %q{Scan carrierwave attachments using AttachmentScanner}
   spec.description   = %q{Automatically sends carrierwave uploads to AttachmentScanner to search for
     viruses, malware and other malicious files. }
-  spec.homepage      = "http://www.attachmentscanner.com"
+  spec.homepage      = "https://www.attachmentscanner.com"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0").reject do |f|
@@ -23,8 +23,8 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency "carrierwave"
-  spec.add_dependency "faraday", "< 2"
-  spec.add_dependency "faraday_middleware"
+  spec.add_dependency "faraday", "~> 2.0"
+  spec.add_dependency "faraday-multipart"
 
   spec.add_development_dependency "bundler"
   spec.add_development_dependency "rake"
