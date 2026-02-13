@@ -1,6 +1,6 @@
 # Carrierwave::Attachmentscanner
 
-[![Build Status](https://travis-ci.org/attachmentscanner/carrierwave-attachmentscanner.svg?branch=master)](https://travis-ci.org/attachmentscanner/carrierwave-attachmentscanner)
+[![Specs](https://github.com/attachmentscanner/carrierwave-attachmentscanner/actions/workflows/specs.yml/badge.svg?branch=main)](https://github.com/attachmentscanner/carrierwave-attachmentscanner/actions/workflows/specs.yml) [![Ruby](https://img.shields.io/badge/ruby-%3E%3D%203.x-red?logo=ruby)](https://www.ruby-lang.org/)
 
 Carrierwave::Attachmentscanner allows you to scan any file uploaded by
 [CarrierWave](https://github.com/carrierwaveuploader/carrierwave) for viruses or
